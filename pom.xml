@@ -36,7 +36,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
-		<finalName>springboot-project-bennett</finalName>
+		<finalName>springboot-project-VJSAR</finalName>
 	</build>
 
 </project>
