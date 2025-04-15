@@ -13,30 +13,8 @@ env:
   JAR_PATH: 'target/*.jar'
 
 jobs:
-  build-and-test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up JDK ${{ env.JAVA_VERSION }}
-        uses: actions/setup-java@v4
-        with:
-          java-version: ${{ env.JAVA_VERSION }}
-          distribution: ${{ env.DISTRO }}
-          cache: maven
-
-      - name: Build, Compile, and Test
-        run: mvn -B clean verify --file pom.xml
-
-      - name: Upload JAR artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ env.ARTIFACT_NAME }}
-          path: ${{ env.JAR_PATH }}
-
   security-gitleaks:
     runs-on: ubuntu-latest
-    needs: build-and-test
     steps:
       - uses: actions/checkout@v4
       - name: Install & Run Gitleaks
@@ -73,16 +51,34 @@ jobs:
                 exit 1
             else
                 echo "Pass"
-            fi    
+            fi
 
-      - name: Upload result to GitHub Code Scanning
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: snyk.sarif
-
-  deploy:
+  build-and-test:
     runs-on: ubuntu-latest
     needs: security-snyk
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: ${{ env.DISTRO }}
+          cache: maven
+
+      - name: Build, Compile, and Test
+        run: mvn -B clean verify --file pom.xml
+
+      - name: Upload JAR artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: ${{ env.JAR_PATH }}          
+
+  deploy:
+    name: Deploy to Azure
+    runs-on: ubuntu-latest
+    needs: build-and-test
     environment:
       name: Production
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
@@ -95,15 +91,16 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: ${{ env.ARTIFACT_NAME }}
+          path: ${{ env.JAR_PATH }} 
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
-        uses: azure/webapps-deploy@v2
+        uses: azure/webapps-deploy@v3
         with:
           app-name: 'JavaApp'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_351F75D8CBD7433EBC5CFE08EDC10150 }}
-          package: '*.jar'
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
+          package: ${{ env.JAR_PATH }} 
 
   security-dast:
     runs-on: ubuntu-latest
