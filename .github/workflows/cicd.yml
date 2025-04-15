@@ -51,7 +51,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Snyk CLI
+      - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/maven-3-jdk-11@master
         continue-on-error: true
         env:
@@ -59,7 +59,7 @@ jobs:
         with:
           args: --sarif-file-output=snyk.sarif
       - name: Upload result to GitHub Code Scanning
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: snyk.sarif
 
