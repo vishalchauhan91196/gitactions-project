@@ -65,6 +65,7 @@ jobs:
           RESULTS_LENGTH=$(jq '.runs[0].results | length' snyk.sarif)
           echo "RESULTS_LENGTH=$RESULTS_LENGTH" >> $GITHUB_ENV
           echo $RESULTS_LENGTH
+          
       - name: Pass_or_Fail_the_job
         run: |
             if [ "$RESULTS_LENGTH" != 0 ]; then
@@ -74,14 +75,10 @@ jobs:
                 echo "Pass"
             fi    
 
-      - name: Print Sarif file
-        run: cat snyk.sarif
-
-
-      # - name: Upload result to GitHub Code Scanning
-      #   uses: github/codeql-action/upload-sarif@v3
-      #   with:
-      #     sarif_file: snyk.sarif
+      - name: Upload result to GitHub Code Scanning
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: snyk.sarif
 
   deploy:
     runs-on: ubuntu-latest
