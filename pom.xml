@@ -36,7 +36,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
-		<finalName>springboot-project-VJSAR</finalName>
+		<finalName>springboot-project-vjsar</finalName>
 	</build>
 
 </project>
