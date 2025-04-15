@@ -67,7 +67,7 @@ jobs:
           cache: maven
 
       - name: Build, Compile, and Test
-        run: mvn -B clean verify --file pom.xml
+        run: mvn clean install -f pom.xml
 
       - name: Upload JAR artifact
         uses: actions/upload-artifact@v4
