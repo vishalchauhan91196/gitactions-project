@@ -95,7 +95,7 @@ jobs:
         with:
           app-name: 'vjsarjavaapp'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
-          package: '*.war'
+          package: '*.jar'
 
   security-dast:
     runs-on: ubuntu-latest
