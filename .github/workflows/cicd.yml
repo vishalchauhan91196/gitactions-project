@@ -73,7 +73,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.ARTIFACT_NAME }}
-          path: ${{ github.workspace }}'        
+          path: ${{ github.workspace }}  
 
   deploy:
     name: Deploy to Azure
@@ -87,7 +87,8 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: ${{ env.ARTIFACT_NAME }} 
+          name: ${{ env.ARTIFACT_NAME }}
+          path: ${{ github.workspace }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
