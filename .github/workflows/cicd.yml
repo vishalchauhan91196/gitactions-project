@@ -1,6 +1,7 @@
 name: Java CI/CD Pipeline with Security Checks
 
 on:
+  workflow_dispatch:
   push:
     branches: [ main ]
   pull_request:
@@ -8,9 +9,8 @@ on:
 
 env:
   JAVA_VERSION: '11'
-  DISTRO: 'temurin'
+  DISTRO: 'adopt'
   ARTIFACT_NAME: 'vjsarjavaapp'
-  JAR_PATH: 'target/*.jar'
 
 jobs:
   security-gitleaks:
@@ -73,7 +73,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.ARTIFACT_NAME }}
-          path: ${{ env.JAR_PATH }}          
+          path: ${{ github.workspace }}'        
 
   deploy:
     name: Deploy to Azure
@@ -87,8 +87,7 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: ${{ env.ARTIFACT_NAME }}
-          path: ${{ env.JAR_PATH }} 
+          name: ${{ env.ARTIFACT_NAME }} 
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
@@ -96,7 +95,7 @@ jobs:
         with:
           app-name: 'vjsarjavaapp'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
-          package: ${{ env.JAR_PATH }} 
+          package: '*.war'
 
   security-dast:
     runs-on: ubuntu-latest
