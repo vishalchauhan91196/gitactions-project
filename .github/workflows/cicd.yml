@@ -10,7 +10,7 @@ on:
 env:
   AZURE_WEBAPP_NAME: time-service-vjsar
   AZURE_WEBAPP_PACKAGE_PATH: "./Time.Api/publish"
-  DOTNET_VERSION: "8.x"
+  DOTNET_VERSION: "9.x"
   SOLUTION_PATH: "Time.Api.sln"
   API_PROJECT_PATH: "Time.Api"
   PUBLISH_DIR: "./publish"
