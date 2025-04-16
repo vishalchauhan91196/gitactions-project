@@ -11,7 +11,7 @@ env:
   # JAVA_VERSION: '11'
   # DISTRO: 'adopt'
   # ARTIFACT_NAME: 'vjsarjavaapp'
-  AZURE_WEBAPP_NAME: time-service
+  AZURE_WEBAPP_NAME: time-service-vjsar
   AZURE_WEBAPP_PACKAGE_PATH: "./Time.Api/publish"
   DOTNET_VERSION: "9.x"
   SOLUTION_PATH: "Time.Api.sln"
